@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import TextField from '../components/TextField';
 import Dropdown from '../components/Dropdown';
 import PlatformSelector from '../components/PlatformSelector';
+import ModelSelector, { AI_MODELS } from '../components/ModelSelector';
 import Button from '../components/Button';
 import Link from 'next/link';
 
@@ -21,6 +22,7 @@ export default function GeneratePage() {
     audience: '',
     goal: '',
     platform: 'all' as 'tiktok' | 'instagram' | 'reels' | 'all',
+    model: AI_MODELS[0].id, // Default to the first model
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,18 +34,23 @@ export default function GeneratePage() {
   const handlePlatformChange = (platform: 'tiktok' | 'instagram' | 'reels' | 'all') => {
     setFormData((prev) => ({ ...prev, platform }));
   };
+  
+  const handleModelChange = (model: string) => {
+    setFormData((prev) => ({ ...prev, model }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // For demo purposes, simulating API call with setTimeout
+    // Add loading animation
     setTimeout(() => {
       const queryParams = new URLSearchParams({
         product: formData.product,
         audience: formData.audience,
         goal: formData.goal,
         platform: formData.platform,
+        model: formData.model,
       }).toString();
       
       router.push(`/results?${queryParams}`);
@@ -92,6 +99,12 @@ export default function GeneratePage() {
             <PlatformSelector
               selectedPlatform={formData.platform}
               onChange={handlePlatformChange}
+              className="mb-4"
+            />
+            
+            <ModelSelector
+              selectedModel={formData.model}
+              onChange={handleModelChange}
               className="mb-8"
             />
             
